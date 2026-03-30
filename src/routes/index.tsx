@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { usePostHog } from 'posthog-js/react'
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
+  const posthog = usePostHog()
   return (
     <main className="page-wrap px-4 pb-8 pt-14">
       <section className="island-shell rise-in relative overflow-hidden rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14">
@@ -20,6 +22,13 @@ function App() {
           <a
             href="/about"
             className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
+            onClick={() =>
+              posthog.capture('cta_clicked', {
+                label: 'About This Starter',
+                destination: '/about',
+                location: 'hero',
+              })
+            }
           >
             About This Starter
           </a>
@@ -28,6 +37,13 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
+            onClick={() =>
+              posthog.capture('external_link_clicked', {
+                link_url: 'https://tanstack.com/router',
+                link_label: 'Router Guide',
+                location: 'hero',
+              })
+            }
           >
             Router Guide
           </a>

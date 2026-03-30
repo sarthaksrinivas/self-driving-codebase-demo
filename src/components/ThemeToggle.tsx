@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { usePostHog } from 'posthog-js/react'
 
 type ThemeMode = 'light' | 'dark' | 'auto'
 
@@ -33,6 +34,7 @@ function applyThemeMode(mode: ThemeMode) {
 
 export default function ThemeToggle() {
   const [mode, setMode] = useState<ThemeMode>('auto')
+  const posthog = usePostHog()
 
   useEffect(() => {
     const initialMode = getInitialMode()
@@ -60,6 +62,7 @@ export default function ThemeToggle() {
     setMode(nextMode)
     applyThemeMode(nextMode)
     window.localStorage.setItem('theme', nextMode)
+    posthog.capture('theme_changed', { theme: nextMode })
   }
 
   const label =
